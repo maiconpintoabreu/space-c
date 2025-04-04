@@ -46,6 +46,10 @@ typedef struct Game {
 Game game = {0};
 float menu_size_width = 200.0f;
 float item_menu_size_height = 50.0f;
+Rectangle exitMenuRec = {0};
+Rectangle startMenuRec = {0};
+Rectangle restartMenuRec = {0};
+
  
 int MenuButtom(Rectangle buttom, const char *buttom_text) {
     if (IsMouseButtonDown(MOUSE_LEFT_BUTTON) && CheckCollisionPointRec(GetMousePosition(), buttom))
@@ -56,6 +60,25 @@ int MenuButtom(Rectangle buttom, const char *buttom_text) {
 
     DrawText(buttom_text, buttom.x + 20, buttom.y + buttom.height / 2 - 10, 20, WHITE);
     return 0;
+}
+
+void PlaceUIButtons(){
+    game.width = GetScreenWidth();
+    game.height = GetScreenHeight();
+	game.halfWidth = game.width / 2.0;
+	game.halfHeight = game.height / 2.0;
+    // Add start button
+    startMenuRec.x = (game.width / 2) - menu_size_width / 2;
+    startMenuRec.y = (game.height / 2) - item_menu_size_height / 1.5f;
+    startMenuRec.width = menu_size_width;
+    startMenuRec.height = item_menu_size_height;
+    // Add restart button
+    restartMenuRec = startMenuRec;
+    // Add exit button
+    exitMenuRec.x = (game.width / 2) - menu_size_width / 2;
+    exitMenuRec.y = (game.height / 2) + item_menu_size_height / 1.5f;
+    exitMenuRec.width = menu_size_width;
+    exitMenuRec.height = item_menu_size_height;
 }
 
 void ResetPlayer() {
@@ -74,6 +97,9 @@ void ResetPlayer() {
 }
 
 void UpdateFrame() {
+    if(IsWindowResized()){
+        PlaceUIButtons();
+    }
     // Tick
     if(game.state == StateInGame){
 		// Input
@@ -192,54 +218,25 @@ void UpdateFrame() {
                 DrawTriangleLines(game.player.topPoint, game.player.rightPoint, game.player.leftPoint, GRAY);
                 break;
             case StateStartMenu:
-                // Add start menu
-                Rectangle startMenuRec = {
-                    (game.width / 2) - menu_size_width / 2,
-                    (game.height / 2) - item_menu_size_height / 1.5f,
-                    menu_size_width,
-                    item_menu_size_height
-                };
                 if (MenuButtom(startMenuRec, "Start Game"))
                 {
                     // Initialize game
                     game.state = StateInGame;
                 }
-                // Add exit button
-                Rectangle exitMenuRec = {
-                    (game.width / 2) - menu_size_width / 2,
-                    (game.height / 2) + item_menu_size_height / 1.5f,
-                    menu_size_width,
-                    item_menu_size_height
-                };
-                if (MenuButtom(exitMenuRec, "Exit Game"))
-                {
+                if (MenuButtom(exitMenuRec, "Exit Game")){
                     // Exit game
                     CloseWindow();
                 }
                 
                 break;
             case StateGameOver:
-                // Add start menu
-                Rectangle RestartMenuRec = {
-                    (game.width / 2) - menu_size_width / 2,
-                    (game.height / 2) - item_menu_size_height / 1.5f,
-                    menu_size_width,
-                    item_menu_size_height
-                };
-                if (MenuButtom(RestartMenuRec, "Restart Game"))
+                if (MenuButtom(restartMenuRec, "Restart Game"))
                 {
                     // Initialize game
                     ResetPlayer();
                     game.state = StateInGame;
                 }
-                // Add exit button
-                Rectangle exitGameOverMenuRec = {
-                    (game.width / 2) - menu_size_width / 2,
-                    (game.height / 2) + item_menu_size_height / 1.5f,
-                    menu_size_width,
-                    item_menu_size_height
-                };
-                if (MenuButtom(exitGameOverMenuRec, "Exit Game"))
+                if (MenuButtom(exitMenuRec, "Exit Game"))
                 {
                     // Exit game
                     CloseWindow();
@@ -254,11 +251,11 @@ int main(void) {
     // Start game
     game.width = 640;
     game.height = 360;
-	game.halfWidth = game.width / 2.0;
-	game.halfHeight = game.height / 2.0;
-    ResetPlayer();
     // Start Raylib Window
     InitWindow(game.width, game.height, "Space C");
+
+    PlaceUIButtons();
+    ResetPlayer();
 
     game.state = StateStartMenu;
 
