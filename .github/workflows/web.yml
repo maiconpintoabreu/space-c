@@ -21,7 +21,7 @@ jobs:
     env:
       BUTLER_API_KEY: ${{ secrets.BUTLER_API_KEY }} # Needs to be added through github
       PROJECT_NAME: space-c
-      PROJECT_BUILD_PATH: build_web_wasm
+      BUILD_DIR: build_web_wasm
       PROJECT_RELEASE_PATH: ${{ github.event.repository.name }}_dev_web_wasm
       PROJECT_CUSTOM_FLAGS: ""
       PROJECT_RESOURCES_PATH: resources
@@ -33,9 +33,9 @@ jobs:
       - name: Cache build/_deps
         uses: actions/cache@v3
         with:
-          path: ${{github.workspace}}/${{env.PROJECT_BUILD_PATH}}/_deps
-          key: ${{env.PROJECT_BUILD_PATH}}-deps
-          restore-keys: ${{env.PROJECT_BUILD_PATH}}-deps
+          path: ${{github.workspace}}/${{env.BUILD_DIR}}/_deps
+          key: ${{env.BUILD_DIR}}-deps
+          restore-keys: ${{env.BUILD_DIR}}-deps
 
       - name: Setup Environment
         run: | 
@@ -53,17 +53,17 @@ jobs:
       # Build emscripten project using a raylibshell html file
       - name: Configure Project
         run: |
-          cd ${{ env.PROJECT_BUILD_PATH }} && emcmake cmake .. -DPLATFORM=Web -DCMAKE_BUILD_TYPE=Release -DCMAKE_EXECUTABLE_SUFFIX=".html" -DPROJECT_RESOURCES_PATH=${{ env.PROJECT_RESOURCES_PATH }}
+          cd ${{ env.BUILD_DIR }} && emcmake cmake .. -DPLATFORM=Web -DCMAKE_BUILD_TYPE=Release -DCMAKE_EXECUTABLE_SUFFIX=".html" -DPROJECT_RESOURCES_PATH=${{ env.PROJECT_RESOURCES_PATH }}
           
       - name: Build Project
         run: |
-          cd ${{ env.PROJECT_BUILD_PATH }} && emmake make BUILD_MODE=RELEASE PROJECT_CUSTOM_FLAGS=${{ env.PROJECT_CUSTOM_FLAGS }}
+          cd ${{ env.BUILD_DIR }} && emmake make BUILD_MODE=RELEASE PROJECT_CUSTOM_FLAGS=${{ env.PROJECT_CUSTOM_FLAGS }}
           cp ${{ env.PROJECT_NAME }}/${{env.PROJECT_NAME}}.html ${{ env.PROJECT_NAME }}/index.html
       
       - name: Generate Artifacts
         run: |
-          # ls ${{ env.PROJECT_BUILD_PATH }}
-          cp -r ${{ env.PROJECT_BUILD_PATH }}/${{ env.PROJECT_NAME }} ${{ env.PROJECT_RELEASE_PATH }}
+          # ls ${{ env.BUILD_DIR }}
+          cp -r ${{ env.BUILD_DIR }}/${{ env.PROJECT_NAME }} ${{ env.PROJECT_RELEASE_PATH }}
           cp README.md ${{ env.PROJECT_RELEASE_PATH }}
           cp LICENSE ${{ env.PROJECT_RELEASE_PATH }}
           ls ${{ env.PROJECT_RELEASE_PATH }}
