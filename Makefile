@@ -1,5 +1,5 @@
 # Define the build directory
-BUILD_DIR = build
+BUILD_DIR ?= build
 BUILD_TYPE ?= Debug  # Default to 'Debug' if BUILD_TYPE is not defined
 # Default target Linux
 all: configure build test
