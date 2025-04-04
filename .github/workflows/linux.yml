@@ -6,7 +6,8 @@ on:
   push:
     branches: main
     paths:
-      - '.github/workflows/linux.yml' # Deploy linux only when required
+      - 'src/**' # Deploy web every change in src folder
+      - '.github/workflows/linux.yml'
     
 permissions:
   contents: read

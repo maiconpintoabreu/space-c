@@ -42,6 +42,7 @@ jobs:
           sudo apt-get update -qq
           sudo apt-get install -y --no-install-recommends python3 libglfw3 libglfw3-dev libx11-dev libxcursor-dev libxrandr-dev libxinerama-dev libxi-dev libxext-dev libxfixes-dev libwayland-dev libxkbcommon-dev cmake
           mkdir -p ${{ env.PROJECT_RELEASE_PATH }}/${{ env.PROJECT_RESOURCES_PATH }}
+          mkdir -p ${{ env.PROJECT_BUILD_PATH }}
         shell: bash
   
       - name: Setup emsdk
