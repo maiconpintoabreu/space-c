@@ -87,4 +87,4 @@ jobs:
         run: ./butler login
 
       - name: Push Web to Itch
-        run: ./butler push ${{ env.PROJECT_RELEASE_PATH }} maiconspas/spacec:web
+        run: ./butler push ${{ env.PROJECT_RELEASE_PATH }} maiconspas/space-c:web
