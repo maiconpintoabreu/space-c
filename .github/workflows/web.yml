@@ -53,6 +53,7 @@ jobs:
       # Build emscripten project using a raylibshell html file
       - name: Configure Project
         run: |
+          mkdir -p ${{ env.BUILD_DIR }}
           cd ${{ env.BUILD_DIR }} && emcmake cmake .. -DPLATFORM=Web -DCMAKE_BUILD_TYPE=Release -DCMAKE_EXECUTABLE_SUFFIX=".html" -DPROJECT_RESOURCES_PATH=${{ env.PROJECT_RESOURCES_PATH }}
           
       - name: Build Project
