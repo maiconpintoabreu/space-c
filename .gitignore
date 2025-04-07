@@ -1,4 +1,3 @@
 # Build
-/build/*
-!/build/.gitkeep
+/build*
 .vscode

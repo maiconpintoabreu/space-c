@@ -20,7 +20,7 @@ jobs:
     
     env:
       BUTLER_API_KEY: ${{ secrets.BUTLER_API_KEY }} # Needs to be added through github
-      PROJECT_NAME: space-c
+      PROJECT_NAME: space-c-game
       BUILD_DIR: build_linux_x64
       PROJECT_RELEASE_PATH: ${{ github.event.repository.name }}_dev_linux_x64
       PROJECT_CUSTOM_FLAGS: ""
